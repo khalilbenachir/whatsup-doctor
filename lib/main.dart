@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/home.dart';
-import 'screens/calls.dart';
-import 'screens/camera.dart';
-import 'screens/stories.dart';
-import 'screens/contacts.dart';
+import 'screens/Profile.dart';
 
 void main() => runApp(new MyApp());
 
@@ -65,11 +62,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return new Scaffold(
       body: new PageView(
         children: [
-          new Home("Home"),
-          new Calls("Calls"),
-          new Camera("Camera screen"),
-          new Stories("Stories screen"),
-          new Contacts("Contacts screen"),
+          new Home("Patients"),
+          new Profile("Doctor"),
         ],
         onPageChanged: onPageChanged,
         controller: _pageController,
@@ -84,52 +78,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
           fixedColor: const Color(0xFF2845E7),
           items: [
             new BottomNavigationBarItem(
-              icon: new Icon(
-                Icons.home,
-              ),
-              title: new Text(
-                "Home",
-              ),
-            ),
-            new BottomNavigationBarItem(
                 icon: new Icon(
-                  Icons.call,
+                  Icons.chat,
                 ),
                 title: new Text(
-                  "Calls",
+                  "Chats",
                 )),
+
+
             new BottomNavigationBarItem(
                 icon: new Icon(
-                  Icons.camera_alt,
+                  Icons.person,
                 ),
                 title: new Text(
-                  "Camera",
-                )),
-            new BottomNavigationBarItem(
-                icon: new Stack(children: <Widget>[
-                  new Icon(Icons.favorite),
-                  new Positioned(
-                      top: -1.0,
-                      right: -1.0,
-                      child: new Stack(
-                        children: <Widget>[
-                          new Icon(
-                            Icons.brightness_1,
-                            size: 12.0,
-                            color: const Color(0xFF2845E7),
-                          ),
-                        ],
-                      ))
-                ]),
-                title: new Text(
-                  "Stories",
-                )),
-            new BottomNavigationBarItem(
-                icon: new Icon(
-                  Icons.account_circle,
-                ),
-                title: new Text(
-                  "Contacts",
+                  "Profile",
                 )),
           ],
           onTap: navigationTapped,

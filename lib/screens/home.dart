@@ -1,17 +1,25 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'Bubble.dart';
+import 'Discusion.dart';
 import 'package:whatsapp_redesign/model/chat_model.dart';
-import 'package:whatsapp_redesign/model/stories_model.dart';
 
 class Home extends StatelessWidget {
   final String listType;
+
   Home(this.listType);
 
   @override
   Widget build(BuildContext context) {
-    final _width = MediaQuery.of(context).size.width;
-    final _height = MediaQuery.of(context).size.height;
+    final _width = MediaQuery
+        .of(context)
+        .size
+        .width;
+    final _height = MediaQuery
+        .of(context)
+        .size
+        .height;
     return new Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: new AppBar(
@@ -21,7 +29,7 @@ class Home extends StatelessWidget {
         ),
         titleSpacing: -1.0,
         leading:
-            new IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+        new IconButton(icon: const Icon(Icons.search), onPressed: () {}),
         actions: <Widget>[
           new IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
         ],
@@ -29,104 +37,6 @@ class Home extends StatelessWidget {
       body: new Column(
         children: <Widget>[
           new Padding(padding: const EdgeInsets.fromLTRB(0.0, 3.0, 0.0, 8.0)),
-          new Container(
-            height: 220.0,
-            color: Colors.grey[200],
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: storiesMockData.length,
-                itemBuilder: (context, int position) => new Column(
-                      children: <Widget>[
-                        new Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-                          child: new Container(
-                            color: Colors.grey[200],
-                            width: 100.0, //story container width
-                            height: 210.0, //story container height
-                            child: new Stack(
-                              alignment: Alignment.center,
-                              children: <Widget>[
-                                new Column(
-                                  children: <Widget>[
-                                    new Container(
-                                      decoration: new BoxDecoration(
-                                          image: new DecorationImage(
-                                              image:
-                                                  new CachedNetworkImageProvider(
-                                                      storiesMockData[position]
-                                                          .storyImageUrl),
-                                              fit: BoxFit.cover),
-                                          borderRadius:
-                                              new BorderRadius.circular(10.0)),
-                                      width: 100.0, //story image width
-                                      height: 140.0,
-                                      child: new Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            5.0, 85.0, 5.0, 5.0),
-                                        child: new Text(
-                                          storiesMockData[position].name,
-                                          style: new TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18.0,
-                                              fontStyle: FontStyle.normal,
-                                              color: Colors.white),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ), //story image height
-                                    ),
-                                  ],
-                                ),
-                                new Padding(
-                                  child: new PhysicalModel(
-                                    borderRadius:
-                                        new BorderRadius.circular(25.0),
-                                    color: Colors.transparent,
-                                    child: new Container(
-                                      width: 50.0,
-                                      height: 50.0,
-                                      decoration: new BoxDecoration(
-                                        image: new DecorationImage(
-                                            image:
-                                                new CachedNetworkImageProvider(
-                                                    storiesMockData[position]
-                                                        .profileImageUrl),
-                                            fit: BoxFit.cover),
-                                        borderRadius:
-                                            new BorderRadius.circular(25.0),
-                                        border: new Border.all(
-                                          width: 3.0,
-                                          color: storiesMockData[position].storySeen ? Colors.grey : const Color(0xFF2845E7)
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  padding: const EdgeInsets.fromLTRB(
-                                      5.0, 65.0, 5.0, 0.0),
-                                ),
-                                new Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        5.0, 140.0, 5.0, 0.0),
-                                    child: new Center(
-                                      child: new Text(
-                                        storiesMockData[position].day,
-                                      ),
-                                    )),
-                                new Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      5.0, 172.0, 5.0, 0.0),
-                                  child:
-                                      new Text(storiesMockData[position].time),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    )),
-          ),
           new Expanded(
             child: ListView.builder(
                 itemBuilder: (context, position) {
@@ -137,9 +47,16 @@ class Home extends StatelessWidget {
                           color: const Color(0xFFFFFFFF),
                           child: new ListTile(
                             leading: new CircleAvatar(
-                              backgroundImage: new CachedNetworkImageProvider(ChatMockData[position]
-                                                        .imageUrl),
+                              backgroundImage: new AssetImage(
+                                  ChatMockData[position].imageUrl),
                             ),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return BubbleScreen(ChatMockData[position].name.toUpperCase());
+                                  })
+                              );
+                            },
                             title: new Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
