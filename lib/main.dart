@@ -11,8 +11,8 @@ class MyApp extends StatelessWidget {
       title: '',
       debugShowCheckedModeBanner: false,
       theme: new ThemeData(
-        primaryColor: const Color(0xFF2845E7),
-        primaryColorDark: const Color(0xFF2845E7),
+        primaryColor: const Color(0xFF4CB8E2),
+        primaryColorDark: const Color(0xFF4CB8E2),
       ),
       home: new DashboardScreen(title: ''),
     );
@@ -75,7 +75,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ), // sets the inactive color of the `BottomNavigationBar`
         child: new BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          fixedColor: const Color(0xFF2845E7),
+          fixedColor: const Color(0xFF4CB8E2),
           items: [
             new BottomNavigationBarItem(
                 icon: new Icon(

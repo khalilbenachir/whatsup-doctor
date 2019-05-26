@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'Bubble.dart';
+import 'BubbleScreen.dart';
 import 'Discusion.dart';
 import 'package:whatsapp_redesign/model/chat_model.dart';
 
@@ -29,9 +29,12 @@ class Home extends StatelessWidget {
         ),
         titleSpacing: -1.0,
         leading:
-        new IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+        new IconButton(icon: const Icon(Icons.search, color: Colors.white,),
+            onPressed: () {}),
         actions: <Widget>[
-          new IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
+          new IconButton(
+              icon: const Icon(Icons.more_vert, color: Colors.white,),
+              onPressed: () {}),
         ],
       ),
       body: new Column(
