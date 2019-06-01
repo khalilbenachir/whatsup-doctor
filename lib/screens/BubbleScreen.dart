@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'Bubble.dart';
-import 'Details.dart';
+import 'package:intl/intl.dart';
+import 'package:whatsapp_redesign/screens/Details.dart';
+import 'GlobalList.dart';
 
 class BubbleScreen extends StatefulWidget {
   final String _patientName;
@@ -12,8 +14,8 @@ class BubbleScreen extends StatefulWidget {
 }
 
 class _BubbleScreenState extends State<BubbleScreen> {
+  TextEditingController _messageController = new TextEditingController();
   bool enableButton;
-
   final String _patientName;
 
   @override
@@ -39,18 +41,17 @@ class _BubbleScreenState extends State<BubbleScreen> {
               padding: EdgeInsets.all(10),
               child: Container(
                 decoration:
-                    BoxDecoration(color: Colors.transparent, boxShadow: [
+                BoxDecoration(color: Colors.transparent, boxShadow: [
                   BoxShadow(
                     color: Colors.grey.shade200,
                     blurRadius: 80.0,
                   ),
                 ]),
-                child: InkWell(
-                  child: Icon(Icons.add_box),
-                  onTap: () {
-                    setState(() {
-                      enableButton = !enableButton;
-                    });
+                child: IconButton(
+                  icon: Icon(Icons.add_box),
+                  onPressed: () {
+                    enableButton = !enableButton;
+                    setState(() {});
                   },
                 ),
                 margin: EdgeInsets.all(2),
@@ -58,39 +59,55 @@ class _BubbleScreenState extends State<BubbleScreen> {
             ),
             Expanded(
                 child: TextField(
-              autofocus: true,
-              textAlign: TextAlign.center,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                hintText: 'Enter your comment here',
-                hintStyle: TextStyle(fontSize: 15),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide(
-                    width: 0,
-                    style: BorderStyle.none,
+                  autofocus: true,
+                  textAlign: TextAlign.center,
+                  keyboardType: TextInputType.text,
+                  controller: _messageController,
+                  decoration: InputDecoration(
+                    hintText: 'Enter your comment here',
+                    hintStyle: TextStyle(fontSize: 15),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(
+                        width: 0,
+                        style: BorderStyle.none,
+                      ),
+                    ),
+                    prefixIcon: InkWell(
+                      child: Icon(
+                        Icons.sentiment_very_satisfied,
+                        color: Colors.black,
+                      ),
+                      onTap: () {
+                        setState(() {
+                          GlobalList.messages.add("Bien , Continue ...");
+                        });
+                      },
+                    ),
+                    filled: true,
+                    contentPadding: EdgeInsets.all(15),
+                    fillColor: Colors.white,
                   ),
-                ),
-                prefixIcon: Icon(
-                  Icons.sentiment_very_satisfied,
-                  color: Colors.black,
-                ),
-                filled: true,
-                contentPadding: EdgeInsets.all(15),
-                fillColor: Colors.white,
-              ),
-            )),
+                )),
             Padding(
               padding: EdgeInsets.all(10),
               child: Container(
                   decoration:
-                      BoxDecoration(color: Colors.transparent, boxShadow: [
+                  BoxDecoration(color: Colors.transparent, boxShadow: [
                     BoxShadow(
                       color: Colors.grey.shade200,
                       blurRadius: 80.0,
                     ),
                   ]),
-                  child: InkWell(child: Icon(Icons.send), onTap: () {}),
+                  child: IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: () {
+                        GlobalList.messages.add(_messageController.text);
+
+
+                        _messageController.clear();
+                        setState(() {});
+                      }),
                   margin: EdgeInsets.all(2)),
             )
           ],
@@ -116,46 +133,36 @@ class _BubbleScreenState extends State<BubbleScreen> {
       ),
       body: enableButton
           ? Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Bubble(
-                    message: 'Hi there, this is a message',
-                    time: '12:00',
-                    delivered: true,
-                    isMe: false,
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView.builder(
+                        itemCount: GlobalList.messages.length,
+                        itemBuilder: (context, position) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              Bubble(
+                                  message: GlobalList.messages[position],
+                                  time: DateFormat('HH:mm').format(
+                                      DateTime.now()),
+                                  isMe: false),
+
+                            ],
+                          );
+                        }),
                   ),
-                  Bubble(
-                    message: 'Nice one, Flutter is awesome',
-                    time: '12:00',
-                    delivered: true,
-                    isMe: true,
-                  ),
-                  Bubble(
-                    message: 'Whatsapp like bubble talk',
-                    time: '12:01',
-                    delivered: true,
-                    isMe: false,
-                  ),
-                  Bubble(
-                    message: 'Nice one, Flutter is awesome',
-                    time: '12:00',
-                    delivered: true,
-                    isMe: true,
-                  ),
-                  Bubble(
-                    message: 'I\'ve told you so dude!',
-                    time: '12:00',
-                    delivered: true,
-                    isMe: false,
-                  ),
-                ],
-              ),
-            )
+                )
+              ]))
           : Center(
-              child: Details(),
-            ),
+        child: Details(),
+      ),
     );
   }
+
+
 }

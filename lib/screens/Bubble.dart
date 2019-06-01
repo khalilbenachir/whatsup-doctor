@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Bubble extends StatelessWidget {
-  Bubble({this.message, this.time, this.delivered, this.isMe});
+  Bubble({this.message, this.time, this.isMe});
 
   final String message, time;
-  final delivered, isMe;
+  final isMe;
 
   @override
   Widget build(BuildContext context) {

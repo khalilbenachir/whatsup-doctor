@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'GlobalList.dart';
 
 class Details extends StatefulWidget {
   @override
@@ -8,7 +9,8 @@ class Details extends StatefulWidget {
 class _DetailsState extends State<Details> {
   List<DropdownMenuItem> _listrepas = [];
   String _value;
-  List items = getDummyList();
+
+  TextEditingController _newRatio = new TextEditingController();
 
   void loadRepas() {
     _listrepas = [];
@@ -66,27 +68,11 @@ class _DetailsState extends State<Details> {
     ));
   }
 
-  int _radioValue1 = -1;
-  int correctScore = 0;
-  int _radioValue2 = -1;
-  int _radioValue3 = -1;
-  int _radioValue4 = -1;
-  int _radioValue5 = -1;
+  int _radioValue1 = 0;
 
   void _handleRadioValueChange1(int value) {
     setState(() {
       _radioValue1 = value;
-
-      switch (_radioValue1) {
-        case 0:
-          correctScore++;
-          break;
-        case 1:
-          print("selected");
-          break;
-        case 2:
-          break;
-      }
     });
   }
 
@@ -257,6 +243,8 @@ class _DetailsState extends State<Details> {
                 Expanded(
                     flex: 2,
                     child: TextField(
+                      keyboardType: TextInputType.number,
+                      controller: _newRatio,
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(
                           border: UnderlineInputBorder(
@@ -296,10 +284,54 @@ class _DetailsState extends State<Details> {
                             color: Colors.lightBlue,
                             style: BorderStyle.solid,
                             width: 1),
-                        onPressed: () {},
+                        onPressed: () {
+                          String _outputMessage = "";
+
+                          if (_radioValue1 == 0) {
+                            _outputMessage += "Augmenter";
+                          } else {
+                            _outputMessage += "Reduire";
+                          }
+                          _outputMessage += " le ratio du ";
+                          switch (_value) {
+                            case "1":
+                              {
+                                _outputMessage += "petit dejeuner";
+                              }
+                              break;
+                            case "2":
+                              {
+                                _outputMessage += "dejeuner";
+                              }
+                              break;
+                            case "3":
+                              {
+                                _outputMessage += "snack";
+                              }
+                              break;
+                            case "4":
+                              {
+                                _outputMessage += "dinner";
+                              }
+                              break;
+                            default:
+                              {
+                                debugPrint("error");
+                              }
+                          }
+
+                          _outputMessage += " a " + _newRatio.text;
+
+                          print(_outputMessage);
+                          setState(() {
+                            GlobalList.messages.add(_outputMessage);
+                          });
+                          _newRatio.clear();
+                        },
                       ),
                     ),
                   ),
+
                 ],
               ),
             ),
@@ -307,13 +339,13 @@ class _DetailsState extends State<Details> {
             Expanded(
                 child: Container(
                     child: ListView.builder(
-              itemCount: items.length,
+                      itemCount: GlobalList.messages.length,
               itemBuilder: (context, index) {
                 return Dismissible(
-                  key: Key(items[index]),
+                  key: Key(GlobalList.messages[index]),
                   onDismissed: (direction) {
                     setState(() {
-                      items.removeAt(index);
+                      GlobalList.messages.removeAt(index);
                     });
                   },
                   child: Padding(
@@ -335,10 +367,10 @@ class _DetailsState extends State<Details> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            items[index],
+                            GlobalList.messages[index],
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 20.0,
+                              fontSize: 16.0,
                             ),
                           )
                         ],
@@ -354,18 +386,11 @@ class _DetailsState extends State<Details> {
 
   void resetSelection() {
     _handleRadioValueChange1(-1);
-    correctScore = 0;
   }
 
   void validateAnswers() {
-    if (_radioValue1 == -1 &&
-        _radioValue2 == -1 &&
-        _radioValue3 == -1 &&
-        _radioValue4 == -1 &&
-        _radioValue5 == -1) {
+    if (_radioValue1 == -1) {
       print('Please select atleast one answer');
-    } else {
-      print('Your total score is: $correctScore out of 5');
     }
   }
 

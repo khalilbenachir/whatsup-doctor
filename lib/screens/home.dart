@@ -1,8 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'BubbleScreen.dart';
-import 'Discusion.dart';
 import 'package:whatsapp_redesign/model/chat_model.dart';
 
 class Home extends StatelessWidget {
@@ -12,14 +10,6 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    final _height = MediaQuery
-        .of(context)
-        .size
-        .height;
     return new Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: new AppBar(
