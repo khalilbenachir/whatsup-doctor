@@ -59,8 +59,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      body: new PageView(
+    return Scaffold(
+      body: PageView(
         children: [
           new Home("Patients"),
           new Profile("Doctor"),
@@ -75,7 +75,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ), // sets the inactive color of the `BottomNavigationBar`
         child: new BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          fixedColor: const Color(0xFF4CB8E2),
+          fixedColor: Colors.deepOrange,
+
           items: [
             new BottomNavigationBarItem(
                 icon: new Icon(

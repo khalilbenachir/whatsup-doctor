@@ -13,17 +13,35 @@ class Home extends StatelessWidget {
     return new Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: new AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Color(0xFFFF8767),
+                Color(0xFFFFA891),
+              ],
+            ),
+          ),
+        ),
         title: new Text(
-          listType,
+          listType.toUpperCase(),
           style: new TextStyle(color: const Color(0xFFFFFFFF)),
         ),
         titleSpacing: -1.0,
-        leading:
-        new IconButton(icon: const Icon(Icons.search, color: Colors.white,),
+        leading: new IconButton(
+            icon: const Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
             onPressed: () {}),
         actions: <Widget>[
           new IconButton(
-              icon: const Icon(Icons.more_vert, color: Colors.white,),
+              icon: const Icon(
+                Icons.more_vert,
+                color: Colors.white,
+              ),
               onPressed: () {}),
         ],
       ),
@@ -40,15 +58,25 @@ class Home extends StatelessWidget {
                           color: const Color(0xFFFFFFFF),
                           child: new ListTile(
                             leading: new CircleAvatar(
-                              backgroundImage: new AssetImage(
+                              child: Container(
+                                width: 100.0,
+                                height: 150.0,
+                                decoration: BoxDecoration(
+                                    color: Colors.deepOrangeAccent,
+                                    borderRadius: BorderRadius.circular(50),
+                                    border: Border.all(
+                                        color: Colors.deepOrangeAccent)),
+                              ),
+                              backgroundImage: AssetImage(
                                   ChatMockData[position].imageUrl),
                             ),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                    return BubbleScreen(ChatMockData[position].name.toUpperCase());
-                                  })
-                              );
+                                    return BubbleScreen(
+                                        ChatMockData[position].name
+                                            .toUpperCase());
+                                  }));
                             },
                             title: new Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

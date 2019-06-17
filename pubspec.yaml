@@ -7,6 +7,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^0.1.2
+  flutter_local_notifications:
   intl: 0.15.7
   camera: ^0.2.4
   path_provider: ^0.4.1
@@ -21,3 +22,4 @@ flutter:
      - lib/assets/patient.png
      - lib/assets/doctir.png
      - lib/assets/doctor.png
+     - lib/assets/orangeDoctor.png

@@ -9,6 +9,7 @@ class Details extends StatefulWidget {
 class _DetailsState extends State<Details> {
   List<DropdownMenuItem> _listrepas = [];
   String _value;
+  bool _validate = false;
 
   TextEditingController _newRatio = new TextEditingController();
 
@@ -114,7 +115,7 @@ class _DetailsState extends State<Details> {
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           fontStyle: FontStyle.normal,
-                          color: Colors.lightBlue,
+                          color: Colors.deepOrangeAccent,
                         ),
                       ),
                     ),
@@ -126,6 +127,7 @@ class _DetailsState extends State<Details> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 new Radio(
+                  activeColor: Colors.deepOrangeAccent,
                   value: 0,
                   groupValue: _radioValue1,
                   onChanged: _handleRadioValueChange1,
@@ -136,6 +138,7 @@ class _DetailsState extends State<Details> {
                 ),
                 new Radio(
                   value: 1,
+                  activeColor: Colors.deepOrangeAccent,
                   groupValue: _radioValue1,
                   onChanged: _handleRadioValueChange1,
                 ),
@@ -178,7 +181,7 @@ class _DetailsState extends State<Details> {
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           fontStyle: FontStyle.normal,
-                          color: Colors.lightBlue,
+                          color: Colors.deepOrangeAccent,
                         ),
                       ),
                     ),
@@ -187,21 +190,27 @@ class _DetailsState extends State<Details> {
               ],
             ),
             Container(
-              child: Center(
-                child: DropdownButton(
-                  hint: Text(
-                    "Choose your meal ?",
-                    textAlign: TextAlign.center,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: DropdownButton(
+                    hint: Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Text(
+                        "Choose your meal ?",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    items: _listrepas,
+                    onChanged: (value) {
+                      setState(() {
+                        _value = value;
+                      });
+                    },
+                    value: _value,
+                    elevation: 4,
+                    isExpanded: true,
                   ),
-                  items: _listrepas,
-                  onChanged: (value) {
-                    setState(() {
-                      _value = value;
-                    });
-                  },
-                  value: _value,
-                  elevation: 4,
-                  isExpanded: true,
                 ),
               ),
             ),
@@ -230,7 +239,7 @@ class _DetailsState extends State<Details> {
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             fontStyle: FontStyle.normal,
-                            color: Colors.lightBlue,
+                            color: Colors.deepOrangeAccent,
                           ),
                         ),
                       ),
@@ -247,6 +256,7 @@ class _DetailsState extends State<Details> {
                       controller: _newRatio,
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(
+                          errorText: _validate ? 'Value Can\'t Be Empty' : null,
                           border: UnderlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0)),
                           hintText: 'Please enter the new value'),
@@ -270,68 +280,80 @@ class _DetailsState extends State<Details> {
                         highlightElevation: 21,
                         color: Colors.white,
                         shape: StadiumBorder(),
-                        textColor: Colors.lightBlue,
+                        textColor: Colors.deepOrangeAccent,
                         child: Text(
                           'AJOUTER',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             fontStyle: FontStyle.normal,
-                            color: Colors.lightBlue,
+                            color: Colors.deepOrangeAccent,
                           ),
                         ),
                         borderSide: BorderSide(
-                            color: Colors.lightBlue,
+                            color: Colors.deepOrangeAccent,
                             style: BorderStyle.solid,
                             width: 1),
                         onPressed: () {
+                          setState(() {
+                            _newRatio.text.isEmpty
+                                ? _validate = true
+                                : _validate = false;
+                            final isDigitsOnly = int.tryParse(_newRatio.text);
+                            return isDigitsOnly == null
+                                ? _validate = true
+                                : _validate = false;
+                          });
+
                           String _outputMessage = "";
 
-                          if (_radioValue1 == 0) {
-                            _outputMessage += "Augmenter";
-                          } else {
-                            _outputMessage += "Reduire";
-                          }
-                          _outputMessage += " le ratio du ";
-                          switch (_value) {
-                            case "1":
-                              {
-                                _outputMessage += "petit dejeuner";
-                              }
-                              break;
-                            case "2":
-                              {
-                                _outputMessage += "dejeuner";
-                              }
-                              break;
-                            case "3":
-                              {
-                                _outputMessage += "snack";
-                              }
-                              break;
-                            case "4":
-                              {
-                                _outputMessage += "dinner";
-                              }
-                              break;
-                            default:
-                              {
-                                debugPrint("error");
-                              }
-                          }
+                          if (!_validate) {
+                            if (_radioValue1 == 0) {
+                              _outputMessage += "Augmenter";
+                            } else {
+                              _outputMessage += "Reduire";
+                            }
+                            _outputMessage += " le ratio du ";
+                            switch (_value) {
+                              case "1":
+                                {
+                                  _outputMessage += "petit dejeuner";
+                                }
+                                break;
+                              case "2":
+                                {
+                                  _outputMessage += "dejeuner";
+                                }
+                                break;
+                              case "3":
+                                {
+                                  _outputMessage += "snack";
+                                }
+                                break;
+                              case "4":
+                                {
+                                  _outputMessage += "dinner";
+                                }
+                                break;
+                              default:
+                                {
+                                  debugPrint("error");
+                                }
+                            }
 
-                          _outputMessage += " a " + _newRatio.text;
+                            _outputMessage += " a " + _newRatio.text;
 
-                          print(_outputMessage);
-                          setState(() {
-                            GlobalList.messages.add(_outputMessage);
-                          });
-                          _newRatio.clear();
+                            print(_outputMessage);
+                            setState(() {
+                              GlobalList.messages.add(_outputMessage);
+                              GlobalList.instructions.add(_outputMessage);
+                            });
+                            _newRatio.clear();
+                          }
                         },
                       ),
                     ),
                   ),
-
                 ],
               ),
             ),
@@ -339,13 +361,13 @@ class _DetailsState extends State<Details> {
             Expanded(
                 child: Container(
                     child: ListView.builder(
-                      itemCount: GlobalList.messages.length,
+                      itemCount: GlobalList.instructions.length,
               itemBuilder: (context, index) {
                 return Dismissible(
-                  key: Key(GlobalList.messages[index]),
+                  key: Key(GlobalList.instructions[index]),
                   onDismissed: (direction) {
                     setState(() {
-                      GlobalList.messages.removeAt(index);
+                      GlobalList.instructions.removeAt(index);
                     });
                   },
                   child: Padding(
@@ -359,19 +381,18 @@ class _DetailsState extends State<Details> {
                               blurRadius: 3.0,
                             ),
                           ],
-                          color: Colors.white,
+                          color: Colors.deepOrangeAccent,
                           border:
-                              Border.all(width: .0, color: Colors.lightBlue)),
+                          Border.all(width: .0, color: Color(0xFFF1EEFC))),
                       padding: EdgeInsets.all(5.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            GlobalList.messages[index],
+                            GlobalList.instructions[index],
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 16.0,
-                            ),
+                            style:
+                            TextStyle(fontSize: 17.0, color: Colors.white),
                           )
                         ],
                       ),
@@ -392,12 +413,5 @@ class _DetailsState extends State<Details> {
     if (_radioValue1 == -1) {
       print('Please select atleast one answer');
     }
-  }
-
-  static List getDummyList() {
-    List list = List.generate(10, (i) {
-      return "Item ${i + 1}";
-    });
-    return list;
   }
 }

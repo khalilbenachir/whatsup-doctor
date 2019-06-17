@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Bubble.dart';
+import 'package:whatsapp_redesign/model/Bubble.dart';
 import 'package:intl/intl.dart';
 import 'package:whatsapp_redesign/screens/Details.dart';
 import 'GlobalList.dart';
@@ -21,7 +21,7 @@ class _BubbleScreenState extends State<BubbleScreen> {
   @override
   initState() {
     super.initState();
-    enableButton = false;
+    enableButton = true;
   }
 
   _BubbleScreenState(this._patientName);
@@ -58,13 +58,14 @@ class _BubbleScreenState extends State<BubbleScreen> {
               ),
             ),
             Expanded(
+                flex: 2,
                 child: TextField(
                   autofocus: true,
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.text,
                   controller: _messageController,
                   decoration: InputDecoration(
-                    hintText: 'Enter your comment here',
+                    hintText: 'Type a comment',
                     hintStyle: TextStyle(fontSize: 15),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
@@ -119,12 +120,12 @@ class _BubbleScreenState extends State<BubbleScreen> {
         elevation: .9,
         title: Text(
           _patientName,
-          style: TextStyle(color: Color(0xFF4CB8E2)),
+          style: TextStyle(color: Colors.deepOrange),
         ),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Color(0xFF4CB8E2),
+            color: Colors.deepOrange,
           ),
           onPressed: () {
             Navigator.of(context).pop();

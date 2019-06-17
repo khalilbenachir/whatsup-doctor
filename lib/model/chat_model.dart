@@ -12,7 +12,7 @@ List<ChatModel> ChatMockData = [
       name: "khaliloo",
       message: "Where are you ?",
       time: "12:30 AM",
-      imageUrl: "lib/assets/doctor.png"),
+      imageUrl: "lib/assets/orangeDoctor.png"),
   new ChatModel(
       name: "khaliloo",
       message: "Where are you ?",
