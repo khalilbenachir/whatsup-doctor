@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/home.dart';
 import 'screens/Profile.dart';
+import 'screens/Contact.dart';
 
 void main() => runApp(new MyApp());
 
@@ -62,7 +63,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       body: PageView(
         children: [
-          new Home("Patients"),
+          new Home("Chats"),
+          new Contact("Patients"),
           new Profile("Doctor"),
         ],
         onPageChanged: onPageChanged,
@@ -84,6 +86,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 title: new Text(
                   "Chats",
+                )),
+
+            new BottomNavigationBarItem(
+                icon: new Icon(
+                  Icons.person,
+                ),
+                title: new Text(
+                  "Contacts",
                 )),
 
 

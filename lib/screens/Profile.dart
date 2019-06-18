@@ -48,7 +48,7 @@ class Profile extends StatelessWidget {
                         decoration: BoxDecoration(
                             color: Colors.deepOrangeAccent,
                             image: DecorationImage(
-                              image: new AssetImage("doctor.png"),
+                              image: new AssetImage("lib/assets/doctor.png"),
                               fit: BoxFit.fill,
                             ),
                             borderRadius: BorderRadius.all(
