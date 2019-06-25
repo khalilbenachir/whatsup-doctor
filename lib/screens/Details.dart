@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'GlobalList.dart';
 
 class Details extends StatefulWidget {
@@ -10,6 +13,11 @@ class _DetailsState extends State<Details> {
   List<DropdownMenuItem> _listrepas = [];
   String _value;
   bool _validate = false;
+  String _ratio;
+
+
+  String _url =
+      'http://127.0.0.1:8000/api/users/?id=' + GlobalList.userId.toString();
 
   TextEditingController _newRatio = new TextEditingController();
 
@@ -256,10 +264,11 @@ class _DetailsState extends State<Details> {
                       controller: _newRatio,
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(
-                          errorText: _validate ? 'Value Can\'t Be Empty' : null,
-                          border: UnderlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0)),
-                          hintText: 'Please enter the new value'),
+                        errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                        border: UnderlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0)),
+                        hintText: 'Please enter the new value',
+                      ),
                     ))
               ],
             ),
@@ -306,33 +315,49 @@ class _DetailsState extends State<Details> {
                           });
 
                           String _outputMessage = "";
+                          String _urlMsg = "";
 
                           if (!_validate) {
                             if (_radioValue1 == 0) {
                               _outputMessage += "Augmenter";
+                              _urlMsg += "Augmenter_";
                             } else {
                               _outputMessage += "Reduire";
+                              _urlMsg += "Reduire_";
                             }
                             _outputMessage += " le ratio du ";
+                            _urlMsg += "le_ratio_du_";
                             switch (_value) {
                               case "1":
                                 {
                                   _outputMessage += "petit dejeuner";
+                                  _urlMsg += "petit_dejeuner_";
+                                  _ratio = _newRatio.text;
+                                  _url += '&rp=' + _ratio;
                                 }
                                 break;
                               case "2":
                                 {
                                   _outputMessage += "dejeuner";
+                                  _urlMsg += "dejeuner_";
+                                  _ratio = _newRatio.text;
+                                  _url += '&rd=' + _ratio;
                                 }
                                 break;
                               case "3":
                                 {
                                   _outputMessage += "snack";
+                                  _urlMsg += "snack_";
+                                  _ratio = _newRatio.text;
+                                  _url += '&rc=' + _ratio;
                                 }
                                 break;
                               case "4":
                                 {
                                   _outputMessage += "dinner";
+                                  _urlMsg += "dinner_";
+                                  _ratio = _newRatio.text;
+                                  _url += '&rdi=' + _ratio;
                                 }
                                 break;
                               default:
@@ -342,9 +367,13 @@ class _DetailsState extends State<Details> {
                             }
 
                             _outputMessage += " a " + _newRatio.text;
+                            _urlMsg += "a_" + _newRatio.text;
+                            _url += '&com=' + _urlMsg;
 
-                            print(_outputMessage);
+                            _sendData();
                             setState(() {
+                              _url = 'http://127.0.0.1:8000/api/users/?id=' +
+                                  GlobalList.userId.toString();
                               GlobalList.messages.add(_outputMessage);
                               GlobalList.instructions.add(_outputMessage);
                             });
@@ -362,45 +391,47 @@ class _DetailsState extends State<Details> {
                 child: Container(
                     child: ListView.builder(
                       itemCount: GlobalList.instructions.length,
-              itemBuilder: (context, index) {
-                return Dismissible(
-                  key: Key(GlobalList.instructions[index]),
-                  onDismissed: (direction) {
-                    setState(() {
-                      GlobalList.instructions.removeAt(index);
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      height: 50.0,
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            new BoxShadow(
-                              color: Colors.grey,
-                              blurRadius: 3.0,
+                      itemBuilder: (context, index) {
+                        return Dismissible(
+                          key: Key(GlobalList.instructions[index]),
+                          onDismissed: (direction) {
+                            setState(() {
+                              GlobalList.instructions.removeAt(index);
+                            });
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              height: 50.0,
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    new BoxShadow(
+                                      color: Colors.grey,
+                                      blurRadius: 3.0,
+                                    ),
+                                  ],
+                                  color: Colors.deepOrangeAccent,
+                                  border:
+                                  Border.all(
+                                      width: .0, color: Color(0xFFF1EEFC))),
+                              padding: EdgeInsets.all(5.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    GlobalList.instructions[index],
+                                    textAlign: TextAlign.center,
+                                    style:
+                                    TextStyle(
+                                        fontSize: 17.0, color: Colors.white),
+                                  )
+                                ],
+                              ),
                             ),
-                          ],
-                          color: Colors.deepOrangeAccent,
-                          border:
-                          Border.all(width: .0, color: Color(0xFFF1EEFC))),
-                      padding: EdgeInsets.all(5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            GlobalList.instructions[index],
-                            textAlign: TextAlign.center,
-                            style:
-                            TextStyle(fontSize: 17.0, color: Colors.white),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            )))
+                          ),
+                        );
+                      },
+                    )))
           ],
         ));
   }
@@ -414,4 +445,14 @@ class _DetailsState extends State<Details> {
       print('Please select atleast one answer');
     }
   }
+
+  Future _sendData() async {
+    var res = await get(_url);
+
+    var _dataLoaded = json.decode(res.body);
+
+    print(_dataLoaded);
+  }
+
+
 }

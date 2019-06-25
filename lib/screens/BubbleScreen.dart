@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:whatsapp_redesign/model/Bubble.dart';
 import 'package:intl/intl.dart';
 import 'package:whatsapp_redesign/screens/Details.dart';
-import 'GlobalList.dart';
+import 'package:whatsapp_redesign/screens/GlobalList.dart';
 
 class BubbleScreen extends StatefulWidget {
   final String _patientName;
@@ -17,11 +20,15 @@ class _BubbleScreenState extends State<BubbleScreen> {
   TextEditingController _messageController = new TextEditingController();
   bool enableButton;
   final String _patientName;
+  String _commentaire = "Bien , Continue";
+  List _messages = [];
+  String url;
 
   @override
   initState() {
     super.initState();
     enableButton = true;
+    _loadData();
   }
 
   _BubbleScreenState(this._patientName);
@@ -80,8 +87,15 @@ class _BubbleScreenState extends State<BubbleScreen> {
                         color: Colors.black,
                       ),
                       onTap: () {
+                        url = 'http://127.0.0.1:8000/api/users/?id=' +
+                            GlobalList.userId.toString() +
+                            '&com=' +
+                            _commentaire.replaceAll(
+                                new RegExp(r"\s+\b|\b\s"), "_");
+
+                        _sendData();
                         setState(() {
-                          GlobalList.messages.add("Bien , Continue ...");
+                          GlobalList.messages.add(_commentaire);
                         });
                       },
                     ),
@@ -104,10 +118,17 @@ class _BubbleScreenState extends State<BubbleScreen> {
                       icon: Icon(Icons.send),
                       onPressed: () {
                         GlobalList.messages.add(_messageController.text);
-
+                        url = 'http://127.0.0.1:8000/api/users/?id=' +
+                            GlobalList.userId.toString() + '&com=' +
+                            _messageController.text
+                                .replaceAll(new RegExp(r"\s+\b|\b\s"), "_");
+                        _sendData();
 
                         _messageController.clear();
-                        setState(() {});
+                        setState(() {
+                          // url = 'http://127.0.0.1:8000/api/users/?id=' +
+                          //   GlobalList.userId.toString();
+                        });
                       }),
                   margin: EdgeInsets.all(2)),
             )
@@ -142,17 +163,16 @@ class _BubbleScreenState extends State<BubbleScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListView.builder(
-                        itemCount: GlobalList.messages.length,
+                        itemCount: _messages.length,
                         itemBuilder: (context, position) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
                               Bubble(
-                                  message: GlobalList.messages[position],
-                                  time: DateFormat('HH:mm').format(
-                                      DateTime.now()),
+                                  message: _messages[position],
+                                  time: DateFormat('HH:mm')
+                                      .format(DateTime.now()),
                                   isMe: false),
-
                             ],
                           );
                         }),
@@ -165,5 +185,27 @@ class _BubbleScreenState extends State<BubbleScreen> {
     );
   }
 
+  Future _sendData() async {
+    var res = await get(url);
 
+    print(res.body);
+  }
+
+  Future _loadData() async {
+    String _urlAddress = 'http://127.0.0.1:8000/api/users/commentaires/' +
+        GlobalList.userId.toString();
+    var res = await get(_urlAddress);
+
+    var _dataLoaded = json.decode(res.body);
+
+    for (int i = 0; i < _dataLoaded['commentaires'].length; i++) {
+      if (_dataLoaded['commentaires'][i]['patient_id'].toString().compareTo(
+          GlobalList.userId.toString()) == 0) {
+        _messages.add(_dataLoaded['commentaires'][i]['contenue']);
+      }
+    }
+
+    print(_dataLoaded['commentaires'][0]);
+    print(_dataLoaded.length);
+  }
 }
