@@ -1,12 +1,35 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'BubbleScreen.dart';
-import 'package:whatsapp_redesign/model/chat_model.dart';
+import 'GlobalList.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   final String listType;
 
   Home(this.listType);
+
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  List _messages = [];
+  List _users = [];
+  List _idUsers = [];
+
+
+  String _imageUrl = 'lib/assets/doctor.png';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +49,7 @@ class Home extends StatelessWidget {
           ),
         ),
         title: new Text(
-          listType.toUpperCase(),
+          widget.listType.toUpperCase(),
           style: new TextStyle(color: const Color(0xFFFFFFFF)),
         ),
         titleSpacing: -1.0,
@@ -67,27 +90,28 @@ class Home extends StatelessWidget {
                                     border: Border.all(
                                         color: Colors.deepOrangeAccent)),
                               ),
-                              backgroundImage: AssetImage(
-                                  ChatMockData[position].imageUrl),
+                              backgroundImage:
+                              AssetImage(_imageUrl),
                             ),
                             onTap: () {
+                              GlobalList.userId = int.parse(_idUsers[position]);
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
                                     return BubbleScreen(
-                                        ChatMockData[position].name
-                                            .toUpperCase());
+                                        _users[position].toUpperCase());
                                   }));
                             },
                             title: new Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 new Text(
-                                  ChatMockData[position].name,
+                                  _users[position],
                                   style: new TextStyle(
                                       fontWeight: FontWeight.bold),
                                 ),
                                 new Text(
-                                  ChatMockData[position].time,
+                                  DateFormat('HH:mm')
+                                      .format(DateTime.now()).toString(),
                                   style: new TextStyle(
                                       color: Colors.grey, fontSize: 14.0),
                                 ),
@@ -96,17 +120,51 @@ class Home extends StatelessWidget {
                             subtitle: new Container(
                               padding: const EdgeInsets.only(top: 5.0),
                               child: new Text(
-                                ChatMockData[position].message,
+                                _messages[position],
                                 style: new TextStyle(
                                     color: Colors.grey, fontSize: 15.0),
                               ),
                             ),
                           )));
                 },
-                itemCount: ChatMockData.length),
+                itemCount: _messages.length),
           )
         ],
       ),
     );
+  }
+
+  Future _loadData() async {
+    String _urlUsers = 'http://127.0.0.1:8000/api/users';
+
+    var response = await get(_urlUsers);
+
+    var _dataUsers = json.decode(response.body);
+
+
+    for (int i = 0; i < _dataUsers['patients'].length; i++) {
+      _idUsers.add(_dataUsers['patients'][i]['id'].toString());
+      _users.add(_dataUsers['patients'][i]['nom']);
+    }
+
+    for (int i = 0; i < _idUsers.length; i++) {
+      String _urlAddress =
+          'http://127.0.0.1:8000/api/users/commentaires/' + _idUsers[i];
+      var res = await get(_urlAddress);
+
+      var _dataLoaded = json.decode(res.body);
+
+      if (_dataLoaded['commentaires'][i]['patient_id']
+          .toString()
+          .compareTo(_idUsers[i].toString()) ==
+          0) {
+        setState(() {
+          _messages.add(_dataLoaded['commentaires'][i]['contenue']);
+        });
+      }
+
+      print(_dataLoaded['commentaires'][0]);
+      print(_messages);
+    }
   }
 }

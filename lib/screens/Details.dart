@@ -17,7 +17,7 @@ class _DetailsState extends State<Details> {
 
 
   String _url =
-      'http://127.0.0.1:8000/api/users/?id=' + GlobalList.userId.toString();
+      'http://127.0.0.1:8000/api/update?id=' + GlobalList.userId.toString();
 
   TextEditingController _newRatio = new TextEditingController();
 
@@ -372,7 +372,7 @@ class _DetailsState extends State<Details> {
 
                             _sendData();
                             setState(() {
-                              _url = 'http://127.0.0.1:8000/api/users/?id=' +
+                              _url = 'http://127.0.0.1:8000/api/update?id=' +
                                   GlobalList.userId.toString();
                               GlobalList.messages.add(_outputMessage);
                               GlobalList.instructions.add(_outputMessage);

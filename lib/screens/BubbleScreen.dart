@@ -29,6 +29,7 @@ class _BubbleScreenState extends State<BubbleScreen> {
     super.initState();
     enableButton = true;
     _loadData();
+
   }
 
   _BubbleScreenState(this._patientName);
@@ -87,7 +88,7 @@ class _BubbleScreenState extends State<BubbleScreen> {
                         color: Colors.black,
                       ),
                       onTap: () {
-                        url = 'http://127.0.0.1:8000/api/users/?id=' +
+                        url = 'http://127.0.0.1:8000/api/update?id=' +
                             GlobalList.userId.toString() +
                             '&com=' +
                             _commentaire.replaceAll(
@@ -118,7 +119,7 @@ class _BubbleScreenState extends State<BubbleScreen> {
                       icon: Icon(Icons.send),
                       onPressed: () {
                         GlobalList.messages.add(_messageController.text);
-                        url = 'http://127.0.0.1:8000/api/users/?id=' +
+                        url = 'http://127.0.0.1:8000/api/update?id=' +
                             GlobalList.userId.toString() + '&com=' +
                             _messageController.text
                                 .replaceAll(new RegExp(r"\s+\b|\b\s"), "_");
@@ -201,7 +202,9 @@ class _BubbleScreenState extends State<BubbleScreen> {
     for (int i = 0; i < _dataLoaded['commentaires'].length; i++) {
       if (_dataLoaded['commentaires'][i]['patient_id'].toString().compareTo(
           GlobalList.userId.toString()) == 0) {
-        _messages.add(_dataLoaded['commentaires'][i]['contenue']);
+        setState(() {
+          _messages.add(_dataLoaded['commentaires'][i]['contenue']);
+        });
       }
     }
 
