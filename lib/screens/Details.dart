@@ -17,7 +17,7 @@ class _DetailsState extends State<Details> {
 
 
   String _url =
-      'http://127.0.0.1:8000/api/update?id=' + GlobalList.userId.toString();
+      'http://192.168.1.119:8000/api/update?id=' + GlobalList.userId.toString();
 
   TextEditingController _newRatio = new TextEditingController();
 
@@ -205,7 +205,7 @@ class _DetailsState extends State<Details> {
                     hint: Padding(
                       padding: const EdgeInsets.only(left: 10.0),
                       child: Text(
-                        "Choose your meal ?",
+                        "Choisissez votre repas ?",
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -242,7 +242,7 @@ class _DetailsState extends State<Details> {
                       padding: const EdgeInsets.all(10),
                       child: Center(
                         child: new Text(
-                          "TO",
+                          "A",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -260,14 +260,12 @@ class _DetailsState extends State<Details> {
                 Expanded(
                     flex: 2,
                     child: TextField(
-                      keyboardType: TextInputType.number,
                       controller: _newRatio,
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(
-                        errorText: _validate ? 'Value Can\'t Be Empty' : null,
                         border: UnderlineInputBorder(
                             borderRadius: BorderRadius.circular(5.0)),
-                        hintText: 'Please enter the new value',
+                        hintText: 'Entrez la nouvelle valeur',
                       ),
                     ))
               ],
@@ -372,8 +370,10 @@ class _DetailsState extends State<Details> {
 
                             _sendData();
                             setState(() {
-                              _url = 'http://127.0.0.1:8000/api/update?id=' +
+                              _url =
+                                  'http://192.168.1.119:8000/api/update?id=' +
                                   GlobalList.userId.toString();
+                              print(GlobalList.userId);
                               GlobalList.messages.add(_outputMessage);
                               GlobalList.instructions.add(_outputMessage);
                             });

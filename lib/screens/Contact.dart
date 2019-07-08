@@ -20,7 +20,7 @@ class _ContactState extends State<Contact> {
   var isLoading = true;
 
   _fetchData() async {
-    final response = await http.get("http://test-gi.ump.ma/gcalpha/api/users");
+    final response = await http.get("http://192.168.1.119:8000/api/users");
     if (response.statusCode == 200) {
       setState(() {
         isLoading = false;

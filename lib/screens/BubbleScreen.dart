@@ -88,7 +88,7 @@ class _BubbleScreenState extends State<BubbleScreen> {
                         color: Colors.black,
                       ),
                       onTap: () {
-                        url = 'http://127.0.0.1:8000/api/update?id=' +
+                        url = 'http://192.168.1.119:8000/api/update?id=' +
                             GlobalList.userId.toString() +
                             '&com=' +
                             _commentaire.replaceAll(
@@ -119,7 +119,7 @@ class _BubbleScreenState extends State<BubbleScreen> {
                       icon: Icon(Icons.send),
                       onPressed: () {
                         GlobalList.messages.add(_messageController.text);
-                        url = 'http://127.0.0.1:8000/api/update?id=' +
+                        url = 'http://192.168.1.119:8000/api/update?id=' +
                             GlobalList.userId.toString() + '&com=' +
                             _messageController.text
                                 .replaceAll(new RegExp(r"\s+\b|\b\s"), "_");
@@ -127,7 +127,7 @@ class _BubbleScreenState extends State<BubbleScreen> {
 
                         _messageController.clear();
                         setState(() {
-                          // url = 'http://127.0.0.1:8000/api/users/?id=' +
+                          // url = 'http://192.168.1.119:8000/api/users/?id=' +
                           //   GlobalList.userId.toString();
                         });
                       }),
@@ -150,6 +150,8 @@ class _BubbleScreenState extends State<BubbleScreen> {
             color: Colors.deepOrange,
           ),
           onPressed: () {
+            GlobalList.instructions = [];
+
             Navigator.of(context).pop();
           },
         ),
@@ -193,7 +195,7 @@ class _BubbleScreenState extends State<BubbleScreen> {
   }
 
   Future _loadData() async {
-    String _urlAddress = 'http://127.0.0.1:8000/api/users/commentaires/' +
+    String _urlAddress = 'http://192.168.1.119:8000/api/users/commentaires/' +
         GlobalList.userId.toString();
     var res = await get(_urlAddress);
 

@@ -41,8 +41,10 @@ class Profile extends StatelessWidget {
                     .size
                     .height / 5,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Container(
+                        alignment: Alignment.center,
                         width: 150.0,
                         height: 150.0,
                         decoration: BoxDecoration(
